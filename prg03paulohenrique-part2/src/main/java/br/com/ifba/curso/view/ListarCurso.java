@@ -4,8 +4,6 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.view.aux.BntEditor;
-import br.com.ifba.curso.view.aux.BntRenderer;
 import br.com.ifba.curso.dao.CursoDao;
 import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.entity.Curso;

@@ -4,17 +4,66 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.view.aux.BntEditor;
+import br.com.ifba.curso.view.aux.BntRenderer;
+import br.com.ifba.curso.dao.CursoDao;
+import br.com.ifba.curso.dao.CursoIDao;
+import br.com.ifba.curso.entity.Curso;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import br.com.ifba.curso.view.CadastrarCurso;
+
+
 /**
  *
  * @author paulo
  */
-public class CursoListar extends javax.swing.JFrame {
+public class ListarCurso extends javax.swing.JFrame {
 
     /**
      * Creates new form CursoListar
      */
-    public CursoListar() {
+    public ListarCurso() {
         initComponents();
+        
+        final int colunaEditar = 3;
+        final int colunaExcluir = 4;
+        tblCursos.getColumnModel().getColumn(colunaEditar).setCellRenderer(new BntRenderer("Editar"));
+        tblCursos.getColumnModel().getColumn(colunaEditar).setCellEditor(new BntEditor(tblCursos, "Editar"));
+        
+        tblCursos.getColumnModel().getColumn(colunaExcluir).setCellRenderer(new BntRenderer("Remover"));
+        tblCursos.getColumnModel().getColumn(colunaExcluir).setCellEditor(new BntEditor(tblCursos, "Remover"));
+        
+        loadTableCursos();
+        
+        setLocationRelativeTo(null);
+    }
+    
+    public final void loadTableCursos(){
+        CursoIDao cursoDao = new CursoDao();
+        List<Curso> listaCursos = cursoDao.findAll();
+        
+        System.out.println("Tamanho da lista encontrada: " + listaCursos.size());
+        for (Curso c : listaCursos) {
+            System.out.println("Curso encontrado: " + c.getNome());
+        }
+
+        popularJTable(listaCursos);
+    }
+    
+    private void popularJTable(List<Curso> cursos){
+        DefaultTableModel modelo = (DefaultTableModel) tblCursos.getModel();
+        modelo.setNumRows(0);
+        
+        for(Curso curso : cursos){
+            modelo.addRow(new Object[]{
+                curso.getCodigoCurso(),
+                curso.getNome(),
+                curso.isAtivo(),
+                "Editar",
+                "Remover"
+            });
+        }
     }
 
     /**
@@ -50,7 +99,7 @@ public class CursoListar extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -71,13 +120,14 @@ public class CursoListar extends javax.swing.JFrame {
             tblCursos.getColumnModel().getColumn(2).setResizable(false);
             tblCursos.getColumnModel().getColumn(2).setPreferredWidth(5);
             tblCursos.getColumnModel().getColumn(3).setResizable(false);
+            tblCursos.getColumnModel().getColumn(3).setPreferredWidth(5);
             tblCursos.getColumnModel().getColumn(4).setResizable(false);
+            tblCursos.getColumnModel().getColumn(4).setPreferredWidth(5);
         }
 
         lblListaCursos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblListaCursos.setText("LISTA DE CURSOS");
 
-        txtPesquisa.setText("Pesquisa");
         txtPesquisa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPesquisaActionPerformed(evt);
@@ -133,7 +183,9 @@ public class CursoListar extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPesquisaActionPerformed
 
     private void bntCadastrarNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCadastrarNovoActionPerformed
-        // TODO add your handling code here:
+        CadastrarCurso viewCadastrarCurso = new CadastrarCurso(this, true);
+        viewCadastrarCurso.setVisible(true);
+        this.loadTableCursos();
     }//GEN-LAST:event_bntCadastrarNovoActionPerformed
 
     /**
@@ -153,21 +205,20 @@ public class CursoListar extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CursoListar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CursoListar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CursoListar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CursoListar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListarCurso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CursoListar().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ListarCurso().setVisible(true);
         });
     }
 

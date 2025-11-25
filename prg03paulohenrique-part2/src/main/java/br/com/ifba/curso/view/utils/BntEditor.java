@@ -2,12 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package br.com.ifba.curso.view;
+package br.com.ifba.curso.view.utils;
 
 import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.dao.CursoDao;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.view.EditarCurso;
+import br.com.ifba.curso.view.EditarCurso;
+import br.com.ifba.curso.view.ListarCurso;
 import br.com.ifba.curso.view.ListarCurso;
 
 import java.awt.Component;

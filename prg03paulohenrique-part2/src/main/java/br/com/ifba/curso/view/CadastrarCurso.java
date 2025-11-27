@@ -4,10 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.controler.CursoControler;
+import br.com.ifba.curso.controler.CursoIControler;
 import br.com.ifba.curso.entity.Curso;
-import br.com.ifba.curso.dao.CursoDao;
-import br.com.ifba.curso.dao.CursoIDao;
-import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 
 /**
@@ -138,22 +137,22 @@ public class CadastrarCurso extends javax.swing.JDialog {
         Curso curso = new Curso(nome,codigo);
         
         try{
-            CursoIDao cursoDao = new CursoDao();
-            cursoDao.save(curso);
+            CursoIControler cursoControler = new CursoControler();
+            cursoControler.save(curso);
             
             JOptionPane.showMessageDialog(this, "Curso Cadastrado com Sucesso");
             this.dispose();
-        } catch (HeadlessException e){
-            JOptionPane.showMessageDialog(this, "Não foi possivel salvar seu cadastro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (RuntimeException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_bntCadastrarActionPerformed
 
     private void txtNomeCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeCursoActionPerformed
-        // TODO add your handling code here:
+        bntCadastrarActionPerformed(evt);
     }//GEN-LAST:event_txtNomeCursoActionPerformed
 
     private void txtCodigoCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoCursoActionPerformed
-        // TODO add your handling code here:
+        txtNomeCurso.requestFocusInWindow();
     }//GEN-LAST:event_txtCodigoCursoActionPerformed
 
     /**

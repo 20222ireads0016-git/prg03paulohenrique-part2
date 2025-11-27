@@ -4,16 +4,13 @@
  */
 package br.com.ifba.curso.view.utils;
 
-import br.com.ifba.curso.dao.CursoIDao;
-import br.com.ifba.curso.dao.CursoDao;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.curso.controler.CursoIControler;
+import br.com.ifba.curso.controler.CursoControler;
 import br.com.ifba.curso.view.EditarCurso;
-import br.com.ifba.curso.view.EditarCurso;
-import br.com.ifba.curso.view.ListarCurso;
 import br.com.ifba.curso.view.ListarCurso;
 
 import java.awt.Component;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractCellEditor;
@@ -68,9 +65,9 @@ public class BntEditor extends AbstractCellEditor implements TableCellEditor, Ac
                 String codidoCursoEditar = (String) table.getValueAt(row, 0);
                 
                 try{
-                    CursoIDao cursoDaoEditar = new CursoDao();
+                    CursoIControler cursoControler = new CursoControler();
                     
-                    Curso cursoAEditar = cursoDaoEditar.findByCodigoCurso(codidoCursoEditar);
+                    Curso cursoAEditar = cursoControler.findByCodigoCurso(codidoCursoEditar);
                     
                     if(cursoAEditar != null){
                         ListarCurso telaPai = (ListarCurso) ListarCurso.getFrames()[0];
@@ -80,8 +77,8 @@ public class BntEditor extends AbstractCellEditor implements TableCellEditor, Ac
                     } else {
                         JOptionPane.showMessageDialog(table, "Erro: não foi possivel localizar o curso para edição");
                     }
-                } catch (HeadlessException ey){
-                    JOptionPane.showMessageDialog(table, "Erro: não foi possivel buscar o curso: " + ey.getMessage());
+                } catch (RuntimeException ey){
+                    JOptionPane.showMessageDialog(table, ey.getMessage(),"Erro", JOptionPane.WARNING_MESSAGE);
                 }
             }
             case 4 -> {
@@ -91,20 +88,21 @@ public class BntEditor extends AbstractCellEditor implements TableCellEditor, Ac
                 
                 if(resposta == JOptionPane.YES_OPTION){
                     try{
-                        CursoIDao cursoDaoDeletar = new CursoDao();
-                        Curso cursoADeletar = cursoDaoDeletar.findByCodigoCurso(codigoCursoDeletar);
+                        CursoIControler cursoControler = new CursoControler();
+                        
+                        Curso cursoADeletar = cursoControler.findByCodigoCurso(codigoCursoDeletar);
                         
                         System.out.println(row);
                         
                         if (cursoADeletar != null){
-                            cursoDaoDeletar.delete(cursoADeletar);
+                            cursoControler.delete(cursoADeletar);
                             ((DefaultTableModel) table.getModel()).removeRow(row);
                             JOptionPane.showMessageDialog(table, "Exclusão realizada com sucesso!");
                         } else {
                             JOptionPane.showMessageDialog(table, "Erro, Não foi possivel localizar o curso em sua base de dados");
                         }
-                    } catch (HeadlessException ex){
-                        JOptionPane.showMessageDialog(table, "Erro ao excluir: " + ex.getMessage());
+                    } catch (RuntimeException ex){
+                        JOptionPane.showMessageDialog(table, ex.getMessage(),"Erro", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             }

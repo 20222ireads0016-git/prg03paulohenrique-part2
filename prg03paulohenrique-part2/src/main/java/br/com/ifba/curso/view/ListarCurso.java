@@ -4,14 +4,15 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.controler.CursoControler;
+import br.com.ifba.curso.controler.CursoIControler;
 import br.com.ifba.curso.view.utils.BntEditor;
 import br.com.ifba.curso.view.utils.BntRenderer;
-import br.com.ifba.curso.dao.CursoDao;
-import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.entity.Curso;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import br.com.ifba.curso.view.CadastrarCurso;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -40,15 +41,26 @@ public class ListarCurso extends javax.swing.JFrame {
     }
     
     public final void loadTableCursos(){
-        CursoIDao cursoDao = new CursoDao();
-        List<Curso> listaCursos = cursoDao.findAll();
-        
-        System.out.println("Tamanho da lista encontrada: " + listaCursos.size());
-        for (Curso c : listaCursos) {
-            System.out.println("Curso encontrado: " + c.getNome());
-        }
+        try {
+            CursoIControler cursoControler = new CursoControler();
+            List<Curso> listaCursos = cursoControler.findAll();
 
-        popularJTable(listaCursos);
+            popularJTable(listaCursos);
+        } catch (RuntimeException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(),"Erro",JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    
+    public final void loadTableCursos(String pesquisa){
+        try{
+            CursoIControler cursoControler = new CursoControler();
+            List<Curso> listaCursos = cursoControler.findByCodigoCursoOrNome(pesquisa);
+
+            popularJTable(listaCursos);
+            
+        } catch (RuntimeException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(),"Erro",JOptionPane.WARNING_MESSAGE);
+        }
     }
     
     private void popularJTable(List<Curso> cursos){
@@ -135,6 +147,11 @@ public class ListarCurso extends javax.swing.JFrame {
         });
 
         bntPesquisar.setText("Pesquisar");
+        bntPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntPesquisarActionPerformed(evt);
+            }
+        });
 
         bntCadastrarNovo.setText("Cadastrar Novo");
         bntCadastrarNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -179,7 +196,7 @@ public class ListarCurso extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
   
     private void txtPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisaActionPerformed
-        // TODO add your handling code here:
+        bntPesquisarActionPerformed(evt);
     }//GEN-LAST:event_txtPesquisaActionPerformed
 
     private void bntCadastrarNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntCadastrarNovoActionPerformed
@@ -187,6 +204,10 @@ public class ListarCurso extends javax.swing.JFrame {
         viewCadastrarCurso.setVisible(true);
         this.loadTableCursos();
     }//GEN-LAST:event_bntCadastrarNovoActionPerformed
+
+    private void bntPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntPesquisarActionPerformed
+        loadTableCursos(txtPesquisa.getText());
+    }//GEN-LAST:event_bntPesquisarActionPerformed
 
     /**
      * @param args the command line arguments

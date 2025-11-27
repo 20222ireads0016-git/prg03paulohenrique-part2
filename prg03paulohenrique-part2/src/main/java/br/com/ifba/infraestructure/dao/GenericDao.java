@@ -8,6 +8,7 @@ import br.com.ifba.infraestructure.entity.PersistenceEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.PersistenceException;
 import java.util.List;
 import java.lang.reflect.ParameterizedType;
 
@@ -40,12 +41,12 @@ public abstract class GenericDao<Entity extends PersistenceEntity> implements Ge
             
             return entity;
             
-        } catch (Exception e){
+        } catch (PersistenceException e){
             if(entityManager.getTransaction().isActive()){
                 entityManager.getTransaction().rollback();
             }
             
-            throw new RuntimeException("Erro #001 - Falha na persistencia de dados" + e);
+            throw new PersistenceException(e);
         }
     }
     
@@ -56,11 +57,11 @@ public abstract class GenericDao<Entity extends PersistenceEntity> implements Ge
             entityManager.merge(entity);
             entityManager.getTransaction().commit();
             return entity;
-        } catch (Exception e){
+        } catch (PersistenceException e){
             if(entityManager.getTransaction().isActive()){
                 entityManager.getTransaction().rollback();
             }
-            throw new RuntimeException("Erro #002 - Falha na mesclagem de dados", e);
+            throw new PersistenceException(e);
         }
     }
     
@@ -77,13 +78,13 @@ public abstract class GenericDao<Entity extends PersistenceEntity> implements Ge
             entityManager.remove(entityToBeRemoved);
             entityManager.getTransaction().commit();
             
-        } catch (Exception e){
+        } catch (PersistenceException e){
             
             if(entityManager.getTransaction().isActive()){
                 entityManager.getTransaction().rollback();
             }
             
-            throw new RuntimeException("Erro #003 - Falha na remoção de dados", e);
+            throw new PersistenceException(e);
         }
     }
     
@@ -91,11 +92,19 @@ public abstract class GenericDao<Entity extends PersistenceEntity> implements Ge
     public List<Entity> findAll(){
         String jpql = "FROM " + entityClass.getSimpleName();
         
-        return entityManager.createQuery(jpql, entityClass).getResultList();
+        try {
+            return entityManager.createQuery(jpql, entityClass).getResultList();
+        } catch (PersistenceException e){
+            throw new PersistenceException(e);
+        }
     }
     
     @Override
     public Entity findById(Long ID){
-        return entityManager.find(entityClass, ID);
+        try {
+            return entityManager.find(entityClass, ID);
+        } catch (PersistenceException e){
+            throw new PersistenceException(e);
+        }
     }
 }

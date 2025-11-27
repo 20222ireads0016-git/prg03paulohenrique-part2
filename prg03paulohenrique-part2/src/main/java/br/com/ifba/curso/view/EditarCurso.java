@@ -5,8 +5,9 @@
 package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.entity.Curso;
-import br.com.ifba.curso.dao.CursoDao;
-import br.com.ifba.curso.dao.CursoIDao;
+import br.com.ifba.curso.controler.CursoIControler;
+import br.com.ifba.curso.controler.CursoControler;
+
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 
@@ -151,7 +152,7 @@ public class EditarCurso extends javax.swing.JDialog {
     }//GEN-LAST:event_bntCancelarActionPerformed
 
     private void bntSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntSalvarActionPerformed
-        CursoIDao cursoDao = new CursoDao();
+        CursoIControler cursoControler = new CursoControler();
         String nome = txtNomeCurso.getText();
         String codigo = txtCodigoCurso.getText();
         
@@ -160,20 +161,20 @@ public class EditarCurso extends javax.swing.JDialog {
             this.cursoEdição.setCodigoCurso(codigo);
             this.cursoEdição.setAtivo(cboxAtivo.isSelected());
             
-            cursoDao.update(this.cursoEdição);
+            cursoControler.update(this.cursoEdição);
             JOptionPane.showMessageDialog(this, "Curso atualizado com sucesso");
             this.dispose();
-        } catch (HeadlessException e){
-            JOptionPane.showMessageDialog(this, "Erro ao Atualizar Curso: " + e.getMessage());
+        } catch (RuntimeException e){
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_bntSalvarActionPerformed
 
     private void txtNomeCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeCursoActionPerformed
-        // TODO add your handling code here:
+        bntSalvarActionPerformed(evt);
     }//GEN-LAST:event_txtNomeCursoActionPerformed
 
     private void txtCodigoCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoCursoActionPerformed
-        // TODO add your handling code here:
+        txtNomeCurso.requestFocusInWindow();
     }//GEN-LAST:event_txtCodigoCursoActionPerformed
 
     /**

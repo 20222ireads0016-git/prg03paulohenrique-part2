@@ -7,10 +7,13 @@ package br.com.ifba.curso.dao;
 import br.com.ifba.infraestructure.dao.GenericIDao;
 import br.com.ifba.curso.entity.Curso;
 
+import java.util.List;
+
 /**
  *
  * @author paulo
  */
 public interface CursoIDao extends GenericIDao<Curso>{
     public Curso findByCodigoCurso(String codigoCurso);
+    public List<Curso> findByCodigoCursoOrNome(String pesquisa);
 }

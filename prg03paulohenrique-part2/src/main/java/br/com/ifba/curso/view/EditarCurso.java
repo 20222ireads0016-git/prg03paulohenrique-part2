@@ -8,7 +8,6 @@ import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.controler.CursoIControler;
 import br.com.ifba.curso.controler.CursoControler;
 
-import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 
 /**

@@ -6,6 +6,7 @@ package br.com.ifba.curso.dao;
 
 import br.com.ifba.infraestructure.dao.GenericDao;
 import br.com.ifba.curso.entity.Curso;
+import jakarta.persistence.NoResultException;
 
 import jakarta.persistence.PersistenceException;
 import java.util.List;
@@ -22,6 +23,8 @@ public class CursoDao extends GenericDao<Curso> implements CursoIDao {
         
         try{
             return entityManager.createQuery(jpql, Curso.class).setParameter("codigoParam", codigoCurso).getSingleResult();
+        } catch (NoResultException e){
+            return null;
         } catch (PersistenceException e) {
             throw new PersistenceException(e);
         }

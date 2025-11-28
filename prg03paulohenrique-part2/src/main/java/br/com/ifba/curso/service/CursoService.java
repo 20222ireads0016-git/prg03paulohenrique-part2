@@ -8,6 +8,7 @@ import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.dao.CursoIDao;
 import br.com.ifba.curso.dao.CursoDao;
 
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import java.util.List;
 

@@ -1,0 +1,42 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package br.com.ifba.curso.dao;
+
+import br.com.ifba.infraestructure.dao.GenericDao;
+import br.com.ifba.curso.entity.Curso;
+
+import jakarta.persistence.NoResultException;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+/**
+ *
+ * @author paulo
+ */
+@Repository
+public class CursoDao extends GenericDao<Curso> implements CursoIDao {
+    
+    @Override
+    public Curso findByCodigoCurso(String codigoCurso){
+        String jpql = "FROM Curso c WHERE c.codigoCurso = :codigoParam";
+        
+        try{
+            return entityManager.createQuery(jpql, Curso.class).setParameter("codigoParam", codigoCurso).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    
+    @Override
+    public List<Curso> findByCodigoCursoOrNome(String pesquisa){
+        String jpql = "FROM Curso c WHERE LOWER(c.codigoCurso) LIKE LOWER(:buscaParam) OR LOWER(c.nome) LIKE LOWER(:buscaParam)";
+        
+        try{
+            return entityManager.createQuery(jpql, Curso.class).setParameter("buscaParam", "%" + pesquisa + "%").getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+}

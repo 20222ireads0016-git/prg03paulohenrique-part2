@@ -5,9 +5,9 @@
 package br.com.ifba.curso.service;
 
 import br.com.ifba.curso.entity.Curso;
-import br.com.ifba.curso.dao.CursoIDao;
-import jakarta.persistence.NoResultException;
+import br.com.ifba.curso.repository.CursoRepository;
 
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class CursoService implements CursoIService {
     
     @Autowired
-    private CursoIDao cursoDao;
+    private CursoRepository cursoRepository;
     
     
     public CursoService(){
@@ -39,7 +39,7 @@ public class CursoService implements CursoIService {
         } else if (curso.getId() != null){
             throw new RuntimeException("Não foi possivel salvar dados, informações já encontradas na base de dados.");
             
-        } else if (cursoDao.findByCodigoCurso(curso.getCodigoCurso()) != null){
+        } else if (cursoRepository.existsByCodigoCurso(curso.getCodigoCurso())){
             throw new RuntimeException("Não foi possivel salvar informações, Já existe um curso com o mesmo codigo.");
             
         } else if (curso.getCodigoCurso().isBlank() || curso.getNome().isBlank()){
@@ -47,7 +47,7 @@ public class CursoService implements CursoIService {
             
         } else {
             try{
-                return cursoDao.save(curso);
+                return cursoRepository.save(curso);
                 
             } catch (NoResultException e){
                 throw new RuntimeException("Ocorreu um erro inesperado, não foi possivel salvar as informações. Tente novamente mais tarde.");
@@ -67,7 +67,7 @@ public class CursoService implements CursoIService {
             
         } else {
             try{
-                return cursoDao.update(curso);
+                return cursoRepository.save(curso);
                 
             } catch (NoResultException e){
                 throw new RuntimeException("Ocorreu um erro inesperado, não foi possivel atualizar as informações. Tente novamente mais tarde.");
@@ -85,8 +85,8 @@ public class CursoService implements CursoIService {
             throw new RuntimeException("Não é possivel deletar um objeto que ainda não foi salvo na base de dados");
         } else {
             try{
-                cursoDao.findById(curso.getId());
-                cursoDao.delete(curso);
+                cursoRepository.findById(curso.getId());
+                cursoRepository.delete(curso);
                 
             } catch (PersistenceException e){
                 throw new RuntimeException("Ocorreu um erro inesperado, não foi possivel deletar as informações. Tente novamente mais tarde.");
@@ -97,41 +97,25 @@ public class CursoService implements CursoIService {
     @Override
     @Transactional(readOnly = true)
     public List<Curso> findAll() throws RuntimeException{
-        try{
-            return cursoDao.findAll();
-        } catch (NoResultException e){
-            throw new RuntimeException("Ocorreu um erro inesperado, não foi possivel carregar as informações. Tente novamente mais tarde.");
-        }
+            return cursoRepository.findAll();
     }
     
     @Override
     @Transactional(readOnly = true)
     public Curso findById(Long ID) throws RuntimeException{
-        try{
-            return cursoDao.findById(ID);
-        } catch (NoResultException e){
-            throw new RuntimeException("Ocorreu um erro inesperado, não foi possivel carregar as informações. Tente novamente mais tarde.");
-        }
+            return cursoRepository.findById(ID).orElse(null);
     }
     
     @Override
     @Transactional(readOnly = true)
     public Curso findByCodigoCurso(String codigoCurso) throws RuntimeException{
-        try{
-            return cursoDao.findByCodigoCurso(codigoCurso);
-        } catch (NoResultException e){
-            throw new RuntimeException("Ocorreu um erro inesperado, não foi possivel carregar as informações. Tente novamente mais tarde.");
-        }
+            return cursoRepository.findByCodigoCurso(codigoCurso);
     }
     
     @Override
     @Transactional(readOnly = true)
     public List<Curso> findByCodigoCursoOrNome(String pesquisa) throws RuntimeException{
-        try{
-            return cursoDao.findByCodigoCursoOrNome(pesquisa);
-        } catch (NoResultException e){
-            throw new RuntimeException("Ocorreu um erro inesperado, não foi possivel carregar as informações. Tente novamente mais tarde.");
-        }
+            return cursoRepository.findByCodigoCursoOrNome(pesquisa);
     }
     
 }

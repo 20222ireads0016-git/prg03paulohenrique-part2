@@ -7,9 +7,14 @@ package br.com.ifba.curso.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
-
 import br.com.ifba.infraestructure.entity.PersistenceEntity;
 import java.io.Serializable;
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 
 /**
  *
@@ -17,6 +22,11 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "cursos")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class Curso extends PersistenceEntity implements Serializable{
     
     @Column(name = "nome", nullable = false)
@@ -27,38 +37,4 @@ public class Curso extends PersistenceEntity implements Serializable{
     
     @Column(name = "ativo")
     boolean ativo;
-    
-    public Curso(String nome, String codigoCurso){
-        setCodigoCurso(codigoCurso);
-        setNome(nome);
-    }
-    
-    public Curso(){
-        
-    }
-    
-
-    public String getNome() {
-        return nome;
-    }
-
-    public final void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCodigoCurso() {
-        return codigoCurso;
-    }
-
-    public final void setCodigoCurso(String codigoCurso) {
-        this.codigoCurso = codigoCurso;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
 }

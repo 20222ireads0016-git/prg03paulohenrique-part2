@@ -8,7 +8,6 @@ import br.com.ifba.curso.controler.CursoIControler;
 import br.com.ifba.curso.entity.Curso;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -145,7 +144,7 @@ public class CadastrarCurso extends javax.swing.JDialog {
             return;
         }
         
-        Curso curso = new Curso(nome,codigo);
+        Curso curso = new Curso(nome,codigo,false);
         
         try{
             cursoControler.save(curso);
